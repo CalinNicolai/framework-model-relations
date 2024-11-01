@@ -13,8 +13,14 @@ class News extends Model
         'title',
         'content',
     ];
-    
-    public function category() {
+
+    public function category()
+    {
         return $this->belongsTo(Category::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'news_tags', 'news_id', 'tag_id');
     }
 }

@@ -35,7 +35,7 @@ class NewsController extends Controller
     {
         News::create($request->all());
 
-        return redirect()->route('news.index'); 
+        return redirect()->route('news.index');
     }
 
     /**
@@ -43,8 +43,13 @@ class NewsController extends Controller
      */
     public function show(int $id): View
     {
+        $news = News::findOrFail($id);
+
+        $tags = $news->tags;
+
         return view('news.show', [
             'news' => News::findOrFail($id),
+            'tags' => $tags
         ]);
     }
 
@@ -76,7 +81,7 @@ class NewsController extends Controller
     public function destroy(int $id)
     {
         $news = News::destroy($id);
-        
+
         return redirect()->route('news.index');
     }
 }

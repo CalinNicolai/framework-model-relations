@@ -1,13 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'news')
+@section('title', 'Categories')
 
 @section('content')
-    <div class="text-right">Categories</div>
     <ul class="flex flex-col gap-3">
         @foreach ($categories as $category)
             <li class="border border-gray-500">
-                <a href="{{ route('category.show', $category->id) }}">{{ $category->title }}</a>
+                <a class="flex justify-between" href="{{ route('categories.show', $category->id) }}">
+                    <p class="m-2">{{ $category->name }} (News: {{ $category->news_count }})</p>
+                </a>
             </li>
         @endforeach
     </ul>

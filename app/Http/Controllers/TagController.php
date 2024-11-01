@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\News;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TagController extends Controller
 {
@@ -12,7 +14,14 @@ class TagController extends Controller
      */
     public function index()
     {
-        //
+        $tags = Tag::join('news_tags', 'tags.id', '=', 'news_tags.tag_id')
+            ->select('tags.*', DB::raw('COUNT(news_tags.tag_id) as news_count'))
+            ->groupBy('tags.id')
+            ->get();
+
+        return view('tags.index', [
+            'tags' => $tags
+        ]);
     }
 
     /**
@@ -36,7 +45,14 @@ class TagController extends Controller
      */
     public function show(Tag $tag)
     {
-        //
+
+        $news = $tag->news;
+
+        return view('tags.show', [
+            'tag' => $tag,
+            'news' => $news,
+            'count' => $news->count(),
+        ]);
     }
 
     /**

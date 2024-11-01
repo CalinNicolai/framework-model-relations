@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -12,7 +14,14 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::join('news', 'categories.id', '=', 'news.category_id')
+            ->select('categories.*', DB::raw('COUNT(news.category_id) as news_count'))
+            ->groupBy('categories.id')
+            ->get();
+
+        return view('categories.index', [
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -36,7 +45,13 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        $news = $category->news;
+
+        return view('categories.show', [
+            'category' => $category,
+            'news' => $news,
+            'count' => $news->count(),
+        ]);
     }
 
     /**
